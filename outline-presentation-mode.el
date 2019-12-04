@@ -27,25 +27,25 @@
 
 (unless outline-presentation-mode-map
   (setq outline-presentation-mode-map (make-sparse-keymap))
-  (define-key outline-presentation-mode-map (kbd "A-M-n")
+  (define-key outline-presentation-mode-map (kbd "M-n")
     'outline-presentation-next)
-  (define-key outline-presentation-mode-map (kbd "A-M-p")
+  (define-key outline-presentation-mode-map (kbd "M-p")
     'outline-presentation-previous)
-  (define-key outline-presentation-mode-map (kbd "A-M-f")
+  (define-key outline-presentation-mode-map (kbd "M-f")
     'outline-presentation-next-top)
-  (define-key outline-presentation-mode-map (kbd "A-M-b")
+  (define-key outline-presentation-mode-map (kbd "M-b")
     'outline-presentation-previous-top)
-  (define-key outline-presentation-mode-map (kbd "A-M-t")
+  (define-key outline-presentation-mode-map (kbd "M-t")
     'outline-presentation-top-toc)
-  (define-key outline-presentation-mode-map (kbd "A-M-y")
+  (define-key outline-presentation-mode-map (kbd "M-y")
     'outline-presentation-toc)
-  (define-key outline-presentation-mode-map (kbd "A-M-r")
+  (define-key outline-presentation-mode-map (kbd "M-r")
     'outline-presentation-resume)
-  (define-key outline-presentation-mode-map (kbd "A-M-s")
+  (define-key outline-presentation-mode-map (kbd "M-s")
     'outline-presentation-start)
-  (define-key outline-presentation-mode-map (kbd "A-M-a")
+  (define-key outline-presentation-mode-map (kbd "M-a")
     'outline-presentation-first)
-  (define-key outline-presentation-mode-map (kbd "A-M-q")
+  (define-key outline-presentation-mode-map (kbd "M-q")
     'outline-presentation-mode-off))
 
 (defun outline-presentation-mode (&optional enable)
@@ -94,7 +94,7 @@
 (defun outline-presentation-end ()
   "Ends the presentation"
   (widen)
-  (show-all))
+  (outline-show-all))
 
 (defun outline-presentation-count-headings ()
   "Returns the number of slides"
@@ -164,23 +164,23 @@
   "Shows only the top headings"
   (interactive)
   (widen)
-  (show-all)
+  (outline-show-all)
   (setq outline-presentation-previous-points
         (cons (point) outline-presentation-previous-points)
         outline-presentation-current-slide-number -1)
-  (hide-sublevels 1)
+  (outline-hide-sublevels 1)
   (goto-char (point-min)))
 
 (defun outline-presentation-toc ()
   "Shows only the headings"
   (interactive)
   (widen)
-  (show-all)
+  (outline-show-all)
   (setq outline-presentation-previous-points
         (cons (point) outline-presentation-previous-points)
         outline-presentation-current-slide-number -1)
-  (hide-body)
-  (hide-sublevels 3)
+  (outline-hide-body)
+  (outline-hide-sublevels 3)
   (goto-char (point-min)))
 
 (defun outline-presentation-resume ()
@@ -188,7 +188,7 @@
   (interactive)
   (unless (null outline-presentation-previous-points)
     (widen)
-    (show-all)
+    (outline-show-all)
     (goto-char (car outline-presentation-previous-points))
     (setq outline-presentation-previous-points
           (cdr outline-presentation-previous-points))
@@ -200,7 +200,7 @@
     (outline-presentation-goto-next-slide)
     (narrow-to-region start (point))
     (goto-char start)
-    (show-entry)))
+    (outline-show-entry)))
 
 (defun outline-presentation-show-toc ()
   "Narrows to show only the headings of the current section"
@@ -214,7 +214,7 @@
         (outline-back-to-heading t)
         (let ((lvl (outline~level)))
           (when (or (= lvl 2) (= lvl 3))
-          (hide-subtree))))
+          (outline-hide-subtree))))
     (narrow-to-region start end)
     (goto-char start))))
 
@@ -231,7 +231,7 @@
   "Makes the next outline node the only visible node"
   (interactive)
   (widen)
-  (show-all)
+  (outline-show-all)
   (outline-back-to-heading t)
   (outline-presentation-goto-next-slide)
   (outline-presentation-show))
@@ -240,7 +240,7 @@
   "Makes the next top outline node the only visible node"
   (interactive)
   (widen)
-  (show-all)
+  (outline-show-all)
   (outline-back-to-heading t)
   (progn
     (while (not (outline-presentation-on-top-heading))
@@ -254,7 +254,7 @@
   "Makes the previous outline node the only visible node"
   (interactive)
   (widen)
-  (show-all)
+  (outline-show-all)
   (outline-back-to-heading t)
   (outline-presentation-goto-previous-slide)
   (outline-presentation-show))
@@ -263,7 +263,7 @@
   "Makes the previous top outline node the only visible node"
   (interactive)
   (widen)
-  (show-all)
+  (outline-show-all)
   (outline-back-to-heading t)
   (progn
     (while (not (outline-presentation-on-top-heading))
@@ -277,7 +277,7 @@
   "Goes back to the first slide"
   (interactive)
   (widen)
-  (show-all)
+  (outline-show-all)
   (goto-char (point-min))
   (outline-presentation-show))
 
@@ -285,7 +285,7 @@
   "Makes the current (where the point is) outline node the only visible node"
   (interactive)
   (widen)
-  (show-all)
+  (outline-show-all)
   (outline-back-to-heading t)
   (while (> (outline~level) 3)
     (forward-line -1)
@@ -307,3 +307,4 @@
     (- (match-end 0) (match-beginning 0))))
 
 (provide 'outline-presentation)
+
